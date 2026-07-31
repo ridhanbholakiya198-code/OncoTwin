@@ -62,10 +62,10 @@ Research prototype / work in progress.
 
 OncoTwin is intended for research and experimentation. AI-generated hypotheses require independent verification against appropriate scientific literature and other reliable evidence.
 
-License
+## License
 
-AGPL-3.0
+**AGPL-3.0**
 
-See the ""LICENSE"" (./LICENSE) file included in this repository.
+See the [`LICENSE`](./LICENSE) file included in this repository.
 
-Official GNU AGPL-3.0 text: "https://www.gnu.org/licenses/agpl-3.0.txt" (https://www.gnu.org/licenses/agpl-3.0.txt)
+Official GNU AGPL-3.0 text: https://www.gnu.org/licenses/agpl-3.0.txt
