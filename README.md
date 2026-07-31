@@ -14,7 +14,7 @@ Features
 - 🧪 Benchmark Workspace — Supports blind validation of hypotheses against known outcomes.
 - 📝 Research Reports — Export saved runs as Markdown reports.
 - 📋 Run History — Preserve previous runs and reasoning results for transparency and reproducibility.
-- 🔑 Bring Your Own Key (BYOK) — Users can configure their own supported AI provider keys.
+- 🔑 Bring Your Own Key (BYOK) — Configure supported AI provider keys.
 - 🔐 Firebase Authentication & Firestore — Authentication and user-specific research data storage.
 
 Tech Stack
@@ -54,7 +54,7 @@ Deployment
 
 OncoTwin can be deployed as a Vite/React application with its server-side API functions on Vercel.
 
-Required environment variables should be configured in the deployment platform rather than committed to the repository.
+Required environment variables should be configured in the deployment platform and must not be committed to the repository.
 
 Project Status
 
@@ -66,6 +66,6 @@ License
 
 AGPL-3.0
 
-See ""LICENSE"" (LICENSE) or the official GNU AGPL-3.0 text:
+See the ""LICENSE"" (./LICENSE) file included in this repository.
 
-"GNU AGPL-3.0 License" (https://reference-url-citation.invalid/0)
+Official GNU AGPL-3.0 text: "https://www.gnu.org/licenses/agpl-3.0.txt" (https://www.gnu.org/licenses/agpl-3.0.txt)
