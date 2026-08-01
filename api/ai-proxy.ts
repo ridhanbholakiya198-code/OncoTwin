@@ -1,4 +1,4 @@
-import { getAdminServices, reserveDailyRun, sanitizeErrorMessage, verifyUser } from "./lib/firebaseAdmin";
+import { getAdminServices, reserveDailyRun, sanitizeErrorMessage, verifyUser } from "./lib/firebaseAdmin.js";
 
 const ENDPOINTS: Record<string, string> = {
   claude: "https://api.anthropic.com/v1/messages",
@@ -13,7 +13,9 @@ const MAX_REQUESTS_PER_WINDOW = 10;
 
 function burstAllowed(uid: string): boolean {
   const now = Date.now();
-  const recent = (burstRequests.get(uid) || []).filter((time) => now - time < WINDOW_MS);
+  const recent = (burstRequests.get(uid) || []).filter(
+    (time) => now - time < WINDOW_MS
+  );
 
   if (recent.length >= MAX_REQUESTS_PER_WINDOW) return false;
 
@@ -53,7 +55,9 @@ export default async function handler(req: any, res: any) {
         "";
 
       if (!defaultKey) {
-        return res.status(500).json({ error: "Shared AI provider is not configured." });
+        return res.status(500).json({
+          error: "Shared AI provider is not configured.",
+        });
       }
 
       const defaultProvider =
@@ -67,7 +71,8 @@ export default async function handler(req: any, res: any) {
 
       if (!allowed) {
         return res.status(429).json({
-          error: "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use.",
+          error:
+            "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use.",
         });
       }
 
@@ -76,8 +81,11 @@ export default async function handler(req: any, res: any) {
     }
 
     const endpoint = ENDPOINTS[provider];
+
     if (!endpoint) {
-      return res.status(400).json({ error: `Unsupported provider: ${provider}` });
+      return res.status(400).json({
+        error: `Unsupported provider: ${provider}`,
+      });
     }
 
     secretForSanitization = apiKey;
@@ -117,12 +125,17 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json(data);
   } catch (error: any) {
     const status = error?.statusCode === 401 ? 401 : 500;
+
     const message =
       status === 401
         ? "Unauthorized."
-        : sanitizeErrorMessage(error?.message, secretForSanitization);
+        : sanitizeErrorMessage(
+            error?.message,
+            secretForSanitization
+          );
 
     console.error("ai-proxy error:", error?.message || error);
+
     return res.status(status).json({ error: message });
   }
 }
