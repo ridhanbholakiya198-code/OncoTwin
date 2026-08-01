@@ -115,6 +115,10 @@ export async function callProvider(provider, apiKey, systemPrompt, userPrompt) {
   if (provider === 'gemini') {
     const data = await callViaProxy('gemini', apiKey, {
       contents: [{ parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        maxOutputTokens: 8192,
+      },
     })
     return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
   }
@@ -143,7 +147,7 @@ function parseEngineResponse(rawText) {
       rejected: Array.isArray(parsed.rejected) ? parsed.rejected : [],
     }
   } catch (err) {
-    throw new Error('Engine returned non-JSON output — could not parse hypotheses.', { cause: err })
+    throw new Error('The AI response could not be read as valid data. This can happen occasionally — please try again.', { cause: err })
   }
 }
 
