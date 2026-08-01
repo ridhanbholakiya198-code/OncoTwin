@@ -6,11 +6,11 @@ import {
 } from "./lib/firebaseAdmin.js";
 
 const ENDPOINTS = {
-  claude: "https://api.anthropic.com/v1/messages",
-  gpt: "https://api.openai.com/v1/chat/completions",
+  claude: "[https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages)",
+  gpt: "[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)",
   gemini:
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-  grok: "https://api.x.ai/v1/chat/completions"
+    "[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent)",
+  grok: "[https://api.x.ai/v1/chat/completions](https://api.x.ai/v1/chat/completions)"
 };
 
 const burstRequests = new Map();
@@ -28,6 +28,15 @@ function burstAllowed(uid) {
   recent.push(now);
   burstRequests.set(uid, recent);
   return true;
+}
+
+function cleanLlmJsonText(text) {
+  if (typeof text !== "string") return text;
+  // Strip markdown code fences ```json ... ```
+  let cleaned = text.replace(/```(?:json)?\s*([\s\S]*?)\s*```/gi, "$1").trim();
+  // Remove trailing commas in JSON objects/arrays
+  cleaned = cleaned.replace(/,\s*([}\]])/g, "$1");
+  return cleaned;
 }
 
 export default async function handler(req, res) {
@@ -138,6 +147,13 @@ export default async function handler(req, res) {
       return res.status(upstream.status).json({
         error: sanitizeErrorMessage(rawMessage, secretForSanitization)
       });
+    }
+
+    // Automatically clean generated Gemini text response before returning to frontend
+    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      data.candidates[0].content.parts[0].text = cleanLlmJsonText(
+        data.candidates[0].content.parts[0].text
+      );
     }
 
     return res.status(200).json(data);
