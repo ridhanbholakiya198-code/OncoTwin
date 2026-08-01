@@ -1,17 +1,23 @@
-import { getAdminServices, reserveDailyRun, sanitizeErrorMessage, verifyUser } from "./lib/firebaseAdmin.js";
+import {
+  getAdminServices,
+  reserveDailyRun,
+  sanitizeErrorMessage,
+  verifyUser
+} from "./lib/firebaseAdmin.js";
 
-const ENDPOINTS: Record<string, string> = {
+const ENDPOINTS = {
   claude: "https://api.anthropic.com/v1/messages",
   gpt: "https://api.openai.com/v1/chat/completions",
-  gemini: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-  grok: "https://api.x.ai/v1/chat/completions",
+  gemini:
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+  grok: "https://api.x.ai/v1/chat/completions"
 };
 
-const burstRequests = new Map<string, number[]>();
+const burstRequests = new Map();
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 10;
 
-function burstAllowed(uid: string): boolean {
+function burstAllowed(uid) {
   const now = Date.now();
   const recent = (burstRequests.get(uid) || []).filter(
     (time) => now - time < WINDOW_MS
@@ -24,7 +30,7 @@ function burstAllowed(uid: string): boolean {
   return true;
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed." });
   }
@@ -36,7 +42,7 @@ export default async function handler(req: any, res: any) {
 
     if (!burstAllowed(uid)) {
       return res.status(429).json({
-        error: "Too many requests. Please slow down and try again.",
+        error: "Too many requests. Please slow down and try again."
       });
     }
 
@@ -56,13 +62,14 @@ export default async function handler(req: any, res: any) {
 
       if (!defaultKey) {
         return res.status(500).json({
-          error: "Shared AI provider is not configured.",
+          error: "Shared AI provider is not configured."
         });
       }
 
       const defaultProvider =
         process.env.DEFAULT_AI_PROVIDER ||
-        ((process.env.GEMINI_API_KEY || process.env.DEFAULT_GEMINI_API_KEY)
+        ((process.env.GEMINI_API_KEY ||
+          process.env.DEFAULT_GEMINI_API_KEY)
           ? "gemini"
           : "claude");
 
@@ -72,7 +79,7 @@ export default async function handler(req: any, res: any) {
       if (!allowed) {
         return res.status(429).json({
           error:
-            "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use.",
+            "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use."
         });
       }
 
@@ -84,14 +91,14 @@ export default async function handler(req: any, res: any) {
 
     if (!endpoint) {
       return res.status(400).json({
-        error: `Unsupported provider: ${provider}`,
+        error: `Unsupported provider: ${provider}`
       });
     }
 
     secretForSanitization = apiKey;
 
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
+    const headers = {
+      "Content-Type": "application/json"
     };
 
     if (provider === "claude") {
@@ -106,10 +113,21 @@ export default async function handler(req: any, res: any) {
     const upstream = await fetch(endpoint, {
       method: "POST",
       headers,
-      body: JSON.stringify(body),
+      body: JSON.stringify(body)
     });
 
-    const data = await upstream.json().catch(() => ({}));
+    let data = {};
+    const textBody = await upstream.text().catch(() => "");
+
+    if (textBody) {
+      try {
+        data = JSON.parse(textBody);
+      } catch (e) {
+        data = { text: textBody };
+      }
+    } else {
+      data = {};
+    }
 
     if (!upstream.ok) {
       const rawMessage =
@@ -118,12 +136,12 @@ export default async function handler(req: any, res: any) {
         `Upstream ${provider} API error`;
 
       return res.status(upstream.status).json({
-        error: sanitizeErrorMessage(rawMessage, secretForSanitization),
+        error: sanitizeErrorMessage(rawMessage, secretForSanitization)
       });
     }
 
     return res.status(200).json(data);
-  } catch (error: any) {
+  } catch (error) {
     const status = error?.statusCode === 401 ? 401 : 500;
 
     const message =
