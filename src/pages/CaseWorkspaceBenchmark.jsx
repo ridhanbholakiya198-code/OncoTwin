@@ -4,6 +4,7 @@ import { db } from '../lib/firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { runBenchmark, SAMPLE_BENCHMARK_CASES } from '../lib/benchmarkEngine.js'
 import Card from '../components/Card.jsx'
+import ErrorDetails from '../components/ErrorDetails.jsx'
 import AnchorDot from '../components/AnchorDot.jsx'
 
 const SCORE_STYLES = {
@@ -20,6 +21,7 @@ export default function CaseWorkspaceBenchmark() {
   const [logs, setLogs] = useState([])
   const [result, setResult] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [fullError, setFullError] = useState(null)
 
   useEffect(() => {
     if (!user) return
@@ -65,11 +67,8 @@ export default function CaseWorkspaceBenchmark() {
       setStatus('done')
     } catch (err) {
       setStatus('error')
-      if (err.name === 'SyntaxError' || err.message.includes('Unexpected token') || err.message.includes('JSON')) {
-        setErrorMsg('Rate limit reached for this provider — wait a minute and try again.')
-      } else {
-        setErrorMsg(err.message)
-      }
+      setErrorMsg(err.message)
+      setFullError(err)
     }
   }
 
@@ -124,7 +123,12 @@ export default function CaseWorkspaceBenchmark() {
         </Card>
       )}
 
-      {errorMsg && <Card><p className="text-sm text-speculative">{errorMsg}</p></Card>}
+      {errorMsg && (
+        <Card>
+          <p className="text-sm text-speculative">{errorMsg}</p>
+          <ErrorDetails error={fullError} />
+        </Card>
+      )}
 
       {result && (
         <>

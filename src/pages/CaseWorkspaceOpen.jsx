@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { runReasoningEngine } from '../lib/reasoningEngine.js'
 import Card from '../components/Card.jsx'
 import AnchorDot from '../components/AnchorDot.jsx'
+import ErrorDetails from '../components/ErrorDetails.jsx'
 
 const FIELD_KEYS = [
   { key: 'mutationProfile', label: 'Mutation profile', placeholder: 'e.g. EGFR Exon 19 deletion' },
@@ -21,6 +22,7 @@ export default function CaseWorkspaceOpen() {
   const [logs, setLogs] = useState([])
   const [result, setResult] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [fullError, setFullError] = useState(null)
   const [isConsistencyMode, setIsConsistencyMode] = useState(false)
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function CaseWorkspaceOpen() {
   async function handleRun() {
     setStatus('running')
     setErrorMsg('')
+    setFullError(null)
     setLogs([])
     setResult(null)
 
@@ -172,6 +175,7 @@ export default function CaseWorkspaceOpen() {
     } catch (err) {
       setStatus('error')
       setErrorMsg(err.message)
+      setFullError(err)
     }
   }
 
@@ -235,6 +239,7 @@ export default function CaseWorkspaceOpen() {
       {status === 'error' && (
         <Card>
           <p className="text-sm text-speculative">{errorMsg}</p>
+          <ErrorDetails error={fullError} />
         </Card>
       )}
 

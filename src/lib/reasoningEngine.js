@@ -71,7 +71,12 @@ async function callViaProxy(provider, apiKey, body) {
     body: JSON.stringify({ provider, apiKey, body }),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data?.error?.message || data?.error || `${provider} API error`)
+  if (!res.ok) {
+    const err = new Error(data?.error?.message || data?.error || `${provider} API error`)
+    err.debugInfo = data?.debug || null
+    err.httpStatus = res.status
+    throw err
+  }
   return data
 }
 

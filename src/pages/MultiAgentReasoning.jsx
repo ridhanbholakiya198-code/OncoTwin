@@ -4,6 +4,7 @@ import { db } from '../lib/firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { runMultiAgentEngine, AGENT_DEFS } from '../lib/multiAgentEngine.js'
 import Card from '../components/Card.jsx'
+import ErrorDetails from '../components/ErrorDetails.jsx'
 import AnchorDot from '../components/AnchorDot.jsx'
 
 const FIELD_KEYS = [
@@ -21,6 +22,7 @@ export default function MultiAgentReasoning() {
   const [agentOutputs, setAgentOutputs] = useState({})
   const [consensus, setConsensus] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [fullError, setFullError] = useState(null)
 
   useEffect(() => {
     if (!user) return
@@ -63,6 +65,7 @@ export default function MultiAgentReasoning() {
     } catch (err) {
       setStatus('error')
       setErrorMsg(err.message)
+      setFullError(err)
     }
   }
 
@@ -122,7 +125,10 @@ export default function MultiAgentReasoning() {
       </div>
 
       {errorMsg && (
-        <Card><p className="text-sm text-speculative">{errorMsg}</p></Card>
+        <Card>
+          <p className="text-sm text-speculative">{errorMsg}</p>
+          <ErrorDetails error={fullError} />
+        </Card>
       )}
 
       {consensus && (

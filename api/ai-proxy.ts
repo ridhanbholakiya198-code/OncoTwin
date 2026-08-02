@@ -43,24 +43,33 @@ export default async function handler(req, res) {
   }
 
   let secretForSanitization = "";
+  let stage = "start";
 
   try {
+    stage = "verify_auth";
     const uid = await verifyUser(req);
 
+    stage = "burst_check";
     if (!burstAllowed(uid)) {
       return res.status(429).json({
-        error: "Too many requests. Please slow down and try again."
+        error: "Too many requests. Please slow down and try again.",
+        debug: { stage, timestamp: new Date().toISOString() }
       });
     }
 
+    stage = "parse_request_body";
     let { provider, apiKey, body } = req.body || {};
     apiKey = typeof apiKey === "string" ? apiKey.trim() : "";
 
     if (!body || typeof body !== "object") {
-      return res.status(400).json({ error: "Invalid AI request body." });
+      return res.status(400).json({
+        error: "Invalid AI request body.",
+        debug: { stage, timestamp: new Date().toISOString() }
+      });
     }
 
     if (!apiKey) {
+      stage = "resolve_default_key";
       const defaultKey =
         process.env.GEMINI_API_KEY ||
         process.env.DEFAULT_GEMINI_API_KEY ||
@@ -69,7 +78,8 @@ export default async function handler(req, res) {
 
       if (!defaultKey) {
         return res.status(500).json({
-          error: "Shared AI provider is not configured."
+          error: "Shared AI provider is not configured.",
+          debug: { stage, timestamp: new Date().toISOString() }
         });
       }
 
@@ -80,13 +90,15 @@ export default async function handler(req, res) {
           ? "gemini"
           : "claude");
 
+      stage = "firestore_reserve_daily_run";
       const { db } = getAdminServices();
       const allowed = await reserveDailyRun(uid, db);
 
       if (!allowed) {
         return res.status(429).json({
           error:
-            "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use."
+            "Free tier limit reached (8 runs/day). Please add your own API key in Settings for unlimited use.",
+          debug: { stage, timestamp: new Date().toISOString() }
         });
       }
 
@@ -94,11 +106,13 @@ export default async function handler(req, res) {
       apiKey = defaultKey;
     }
 
+    stage = "resolve_endpoint";
     const endpoint = ENDPOINTS[provider];
 
     if (!endpoint) {
       return res.status(400).json({
-        error: `Unsupported provider: ${provider}`
+        error: `Unsupported provider: ${provider}`,
+        debug: { stage, timestamp: new Date().toISOString() }
       });
     }
 
@@ -117,12 +131,14 @@ export default async function handler(req, res) {
       headers["Authorization"] = `Bearer ${apiKey}`;
     }
 
+    stage = "fetch_upstream_provider";
     const upstream = await fetch(endpoint, {
       method: "POST",
       headers,
       body: JSON.stringify(body)
     });
 
+    stage = "read_upstream_body";
     let data = {};
     const textBody = await upstream.text().catch(() => "");
 
@@ -137,10 +153,19 @@ export default async function handler(req, res) {
     }
 
     if (!upstream.ok) {
-      const fullRawInfo = `STATUS=${upstream.status} URL=${endpoint} BODY=${textBody}`;
-
       return res.status(upstream.status).json({
-        error: sanitizeErrorMessage(fullRawInfo, secretForSanitization)
+        error: sanitizeErrorMessage(
+          data?.error?.message || data?.error || `Upstream ${provider} API error`,
+          secretForSanitization
+        ),
+        debug: {
+          stage: "upstream_error",
+          timestamp: new Date().toISOString(),
+          upstreamStatus: upstream.status,
+          upstreamUrl: sanitizeErrorMessage(endpoint, secretForSanitization),
+          upstreamBody: sanitizeErrorMessage(textBody, secretForSanitization),
+          provider
+        }
       });
     }
 
@@ -154,16 +179,22 @@ export default async function handler(req, res) {
   } catch (error) {
     const status = error?.statusCode === 401 ? 401 : 500;
 
+    const rawMessage = error?.message || String(error);
     const message =
-      status === 401
-        ? "Unauthorized."
-        : sanitizeErrorMessage(
-            error?.message,
-            secretForSanitization
-          );
+      status === 401 ? "Unauthorized." : sanitizeErrorMessage(rawMessage, secretForSanitization);
 
-    console.error("ai-proxy error:", error?.message || error);
+    console.error("ai-proxy error at stage:", stage, "-", rawMessage);
 
-    return res.status(status).json({ error: message });
+    return res.status(status).json({
+      error: message,
+      debug: {
+        stage,
+        timestamp: new Date().toISOString(),
+        errorName: error?.name || "Unknown",
+        errorCode: error?.code || null,
+        rawMessage: sanitizeErrorMessage(rawMessage, secretForSanitization),
+        stack: sanitizeErrorMessage(String(error?.stack || "").slice(0, 800), secretForSanitization)
+      }
+    });
   }
 }
