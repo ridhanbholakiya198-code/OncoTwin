@@ -9,7 +9,7 @@ const ENDPOINTS = {
   claude: "https://api.anthropic.com/v1/messages",
   gpt: "https://api.openai.com/v1/chat/completions",
   gemini:
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
   grok: "https://api.x.ai/v1/chat/completions"
 };
 
