@@ -13,7 +13,13 @@ export function getAdminServices(): { db: Firestore; auth: Auth } {
       throw new Error("FIREBASE_SERVICE_ACCOUNT is not configured.");
     }
 
-    const serviceAccount = JSON.parse(serviceAccountJson);
+    let serviceAccount;
+    try {
+      serviceAccount = JSON.parse(serviceAccountJson);
+    } catch (e: any) {
+      throw new Error("STAGE_MARKER_FIREBASE_KEY_PARSE_FAILED: " + e.message);
+    }
+
     app = initializeApp({
       credential: cert(serviceAccount),
       ...(projectId ? { projectId } : {}),
@@ -65,8 +71,8 @@ export async function verifyUser(req: any): Promise<string> {
   try {
     const decoded = await auth.verifyIdToken(token);
     return decoded.uid;
-  } catch {
-    const error: any = new Error("Unauthorized");
+  } catch (e: any) {
+    const error: any = new Error("STAGE_MARKER_TOKEN_VERIFY_FAILED: " + (e?.message || e));
     error.statusCode = 401;
     throw error;
   }
