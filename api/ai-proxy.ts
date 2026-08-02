@@ -32,9 +32,7 @@ function burstAllowed(uid) {
 
 function cleanLlmJsonText(text) {
   if (typeof text !== "string") return text;
-  // Strip markdown code fences ```json ... ```
   let cleaned = text.replace(/```(?:json)?\s*([\s\S]*?)\s*```/gi, "$1").trim();
-  // Remove trailing commas in JSON objects/arrays
   cleaned = cleaned.replace(/,\s*([}\]])/g, "$1");
   return cleaned;
 }
@@ -139,17 +137,13 @@ export default async function handler(req, res) {
     }
 
     if (!upstream.ok) {
-      const rawMessage =
-        data?.error?.message ||
-        data?.error ||
-        `Upstream ${provider} API error`;
+      const fullRawInfo = `STATUS=${upstream.status} URL=${endpoint} BODY=${textBody}`;
 
       return res.status(upstream.status).json({
-        error: sanitizeErrorMessage(rawMessage, secretForSanitization)
+        error: sanitizeErrorMessage(fullRawInfo, secretForSanitization)
       });
     }
 
-    // Automatically clean generated Gemini text response before returning to frontend
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
       data.candidates[0].content.parts[0].text = cleanLlmJsonText(
         data.candidates[0].content.parts[0].text
