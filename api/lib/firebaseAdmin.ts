@@ -27,7 +27,7 @@ export function getAdminServices(): { db: Firestore; auth: Auth } {
   }
 
   return {
-    db: getFirestore(app),
+    db: getFirestore(app, "ai-studio-gitloadpreview-7648e883-537d-4db7-8aad-cf853c2eaed5"),
     auth: getAuth(app),
   };
 }
