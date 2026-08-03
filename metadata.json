@@ -1,6 +1,0 @@
-{
-  "name": "GitHub Exporter Info",
-  "description": "Information on how to export the project to GitHub.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
