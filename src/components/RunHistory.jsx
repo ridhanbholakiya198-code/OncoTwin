@@ -67,16 +67,16 @@ export default function RunHistory() {
             <div key={run.id} className="border border-border rounded">
               <div
                 onClick={() => setExpanded(isOpen ? null : run.id)}
-                className="w-full flex items-center justify-between px-3 py-2 text-left cursor-pointer"
+                className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-3 py-2 text-left cursor-pointer"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="text-[11px] font-mono text-muted">{formatTimestamp(run.createdAt)}</span>
                   <span className="text-xs text-ink">
                     {run.type === 'multi_agent' ? 'Multi-Agent Run' : run.type === 'benchmark' ? 'Benchmark Run' : 'Open Case Run'}
                   </span>
                   <span className="text-[11px] text-muted font-mono">{hypotheses.length} hypotheses</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 shrink-0">
                   <span
                     onClick={(e) => handleDelete(e, run.id)}
                     onMouseLeave={() => setConfirmDelete(null)}

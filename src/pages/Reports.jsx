@@ -58,7 +58,7 @@ export default function Reports() {
           {runs.map((run) => {
             const count = (run.hypotheses || run.consensus?.hypotheses || []).length
             return (
-              <div key={run.id} className="flex items-center justify-between border border-border rounded px-3 py-2">
+              <div key={run.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border border-border rounded px-3 py-2">
                 <div>
                   <p className="text-sm text-ink">
                     {run.type === 'multi_agent' ? 'Multi-Agent Run' : run.type === 'benchmark' ? 'Benchmark Run' : 'Open Case Run'}

@@ -80,24 +80,26 @@ export default function DrugRanking() {
   return (
     <div className="space-y-4 max-w-4xl">
       <Card title="Ranked combinations — EGFR-mutant NSCLC">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[11px] uppercase tracking-wider text-muted font-mono border-b border-border">
-              <th className="pb-2 font-normal">Combination</th>
-              <th className="pb-2 font-normal">Anchor</th>
-              <th className="pb-2 font-normal">Evidence strength</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rankedData.map((row) => (
-              <tr key={row.combo} className="border-b border-border/60 last:border-0">
-                <td className="py-2.5 text-ink/90">{row.combo}</td>
-                <td className="py-2.5"><AnchorDot status={row.status} withLabel /></td>
-                <td className="py-2.5 text-muted font-mono">{row.evidenceStrength || '—'}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[480px]">
+            <thead>
+              <tr className="text-left text-[11px] uppercase tracking-wider text-muted font-mono border-b border-border">
+                <th className="pb-2 font-normal">Combination</th>
+                <th className="pb-2 font-normal">Anchor</th>
+                <th className="pb-2 font-normal">Evidence strength</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rankedData.map((row) => (
+                <tr key={row.combo} className="border-b border-border/60 last:border-0">
+                  <td className="py-2.5 text-ink/90 whitespace-normal break-words max-w-[220px]">{row.combo}</td>
+                  <td className="py-2.5 whitespace-nowrap"><AnchorDot status={row.status} withLabel /></td>
+                  <td className="py-2.5 text-muted font-mono whitespace-nowrap">{row.evidenceStrength || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Card>
       
       <Card title="Evidence strength overview">

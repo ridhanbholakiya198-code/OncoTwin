@@ -182,7 +182,7 @@ export default function CaseWorkspaceOpen() {
   return (
     <div className="space-y-4 max-w-4xl">
       <Card title="Case input — structured fields, not free text">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {FIELD_KEYS.map((f) => (
             <div key={f.key}>
               <label className="text-xs text-muted mb-1 block">{f.label}</label>
@@ -195,7 +195,7 @@ export default function CaseWorkspaceOpen() {
             </div>
           ))}
         </div>
-        <div className="mt-4 flex items-center gap-4">
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           <button
             onClick={handleRun}
             disabled={status === 'running'}
@@ -266,7 +266,7 @@ export default function CaseWorkspaceOpen() {
                     </p>
                   )}
                   <p className="text-xs text-ink/80 mb-2">{h.mechanism}</p>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-muted font-mono">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-muted font-mono">
                     <span>Evidence strength: {h.evidenceStrength}</span>
                     <span>Supporting studies: {h.supportingStudies}</span>
                   </div>

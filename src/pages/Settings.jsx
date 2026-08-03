@@ -106,8 +106,8 @@ export default function Settings() {
         </p>
         <div className="space-y-2">
           {AGENT_DEFS.map((a) => (
-            <div key={a.id} className="flex items-center gap-3">
-              <label className="w-44 text-sm text-ink shrink-0">{a.name}</label>
+            <div key={a.id} className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
+              <label className="sm:w-44 text-sm text-ink shrink-0">{a.name}</label>
               <select
                 value={agentModels[a.id] || ''}
                 onChange={(e) => setAgentModels((prev) => ({ ...prev, [a.id]: e.target.value }))}

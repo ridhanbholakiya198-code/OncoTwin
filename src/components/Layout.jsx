@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar.jsx'
 import TopBar from './TopBar.jsx'
@@ -16,13 +17,14 @@ const TITLES = {
 export default function Layout() {
   const { pathname } = useLocation()
   const [title, subtitle] = TITLES[pathname] || ['OncoTwin', '']
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="h-screen flex bg-bg">
-      <Sidebar />
+    <div className="h-screen flex bg-bg overflow-hidden">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0">
-        <TopBar title={title} subtitle={subtitle} />
-        <main className="flex-1 overflow-y-auto p-6">
+        <TopBar title={title} subtitle={subtitle} onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6">
           <Outlet />
         </main>
       </div>

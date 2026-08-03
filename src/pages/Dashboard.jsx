@@ -66,7 +66,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {STAT_CARDS.map((s) => (
           <Card key={s.label}>
             <p className="text-[11px] uppercase tracking-wider text-muted font-mono mb-1">{s.label}</p>

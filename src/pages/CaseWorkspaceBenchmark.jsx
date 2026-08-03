@@ -99,7 +99,7 @@ export default function CaseWorkspaceBenchmark() {
       </Card>
 
       <Card title="Scoring key">
-        <div className="grid grid-cols-3 gap-3 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div className="border border-border rounded p-3">
             <p className="text-established font-mono text-xs mb-1">MATCH</p>
             <p className="text-muted text-xs">Top prediction aligns with the real treatment used</p>
@@ -147,7 +147,7 @@ export default function CaseWorkspaceBenchmark() {
             <p className={`font-mono text-sm mb-3 ${SCORE_STYLES[result.score.level].color}`}>
               {SCORE_STYLES[result.score.level].label}
             </p>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-[11px] text-muted uppercase font-mono mb-1">Engine's top hypothesis</p>
                 <p className="text-ink/90">{result.hypotheses[0]?.title || '—'}</p>

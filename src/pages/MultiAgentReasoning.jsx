@@ -72,7 +72,7 @@ export default function MultiAgentReasoning() {
   return (
     <div className="space-y-4 max-w-4xl">
       <Card title="Case input">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {FIELD_KEYS.map((f) => (
             <div key={f.key}>
               <label className="text-xs text-muted mb-1 block">{f.label}</label>
@@ -97,7 +97,7 @@ export default function MultiAgentReasoning() {
         </p>
       </Card>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {AGENT_DEFS.filter((a) => a.id !== 'consensus').map((a) => {
           const provider = settings?.agentModels?.[a.id] || 'claude';
           const hasKey = !!settings?.byokKeys?.[provider]?.trim();
@@ -155,7 +155,7 @@ export default function MultiAgentReasoning() {
                   <AnchorDot status={h.anchor} withLabel />
                 </div>
                 <p className="text-xs text-ink/80 mb-2">{h.mechanism}</p>
-                <div className="grid grid-cols-2 gap-2 text-[11px] text-muted font-mono mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-muted font-mono mb-2">
                   <span>Evidence strength: {h.evidenceStrength}</span>
                   <span>Supporting studies: {h.supportingStudies}</span>
                 </div>
