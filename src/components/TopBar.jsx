@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 
 export default function TopBar({ title, subtitle, onMenuClick }) {
   const { user, logout } = useAuth()
@@ -23,6 +24,7 @@ export default function TopBar({ title, subtitle, onMenuClick }) {
         </div>
       </div>
       <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+        <ThemeToggle />
         {user ? (
           <>
             <span className="text-xs text-muted font-mono hidden sm:inline max-w-[160px] truncate">

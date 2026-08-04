@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import Logo from '../components/Logo.jsx'
+import ThemeToggle from '../components/ThemeToggle.jsx'
+import Footer from '../components/Footer.jsx'
 
 export default function Login() {
   const [mode, setMode] = useState('login')
@@ -34,7 +36,11 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg p-4">
+    <div className="min-h-screen flex flex-col bg-bg p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <div className="flex-1 flex items-center justify-center">
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8"><Logo size={36} /></div>
         
@@ -105,6 +111,8 @@ export default function Login() {
           <br />See our <a href="/disclaimer" className="text-accent hover:underline">disclaimer</a>.
         </p>
       </div>
+      </div>
+      <Footer />
     </div>
   )
 }

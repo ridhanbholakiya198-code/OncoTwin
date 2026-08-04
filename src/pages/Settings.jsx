@@ -3,6 +3,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../lib/firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import Card from '../components/Card.jsx'
+import ThemeToggle from '../components/ThemeToggle.jsx'
 import { AGENT_DEFS } from '../lib/multiAgentEngine.js'
 
 const PROVIDERS = [
@@ -132,6 +133,52 @@ export default function Settings() {
         </button>
         {saved && <span className="text-xs text-established font-mono">Saved</span>}
       </div>
+
+      <Card title="Appearance">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-ink">Theme</p>
+            <p className="text-xs text-muted mt-0.5">Follows your device by default — override it here.</p>
+          </div>
+          <ThemeToggle />
+        </div>
+      </Card>
+
+      <Card title="About">
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-muted">Version</span>
+            <span className="text-ink font-mono text-xs">v0.1 · AGPL-3.0</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted">Source code</span>
+            <a
+              href="https://github.com/ridhanbholakiya198-code/OncoTwin"
+              target="_blank"
+              rel="noreferrer"
+              className="text-accent hover:underline text-xs"
+            >
+              GitHub repository
+            </a>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted">Developer</span>
+            <a
+              href="https://github.com/ridhanbholakiya198-code"
+              target="_blank"
+              rel="noreferrer"
+              className="text-accent hover:underline text-xs"
+            >
+              ridhanbholakiya198-code
+            </a>
+          </div>
+          <div className="flex items-center gap-4 pt-2 border-t border-border mt-2">
+            <a href="/privacy" className="text-xs text-muted hover:text-accent transition-colors">Privacy Policy</a>
+            <a href="/terms" className="text-xs text-muted hover:text-accent transition-colors">Terms</a>
+            <a href="/disclaimer" className="text-xs text-muted hover:text-accent transition-colors">Disclaimer</a>
+          </div>
+        </div>
+      </Card>
     </div>
   )
 }

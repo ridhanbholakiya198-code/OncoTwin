@@ -1,20 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        bg: '#050607',
-        surface: '#0E1113',
-        surface2: '#14181B',
-        border: '#1C2226',
-        ink: '#E6EDEF',
-        muted: '#8A9599',
-        accent: '#3FA9A0',
-        accentSoft: 'rgba(63,169,160,0.12)',
-        established: '#4ADE80',
-        theoretical: '#FBBF24',
-        speculative: '#F87171',
+        bg: 'var(--color-bg)',
+        surface: 'var(--color-surface)',
+        surface2: 'var(--color-surface2)',
+        border: 'var(--color-border)',
+        ink: 'var(--color-ink)',
+        muted: 'var(--color-muted)',
+        accent: 'var(--color-accent)',
+        accentSoft: 'var(--color-accent-soft)',
+        established: 'var(--color-established)',
+        theoretical: 'var(--color-theoretical)',
+        speculative: 'var(--color-speculative)',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'sans-serif'],

@@ -18,13 +18,13 @@ export default function BarChart({ data, height = 140 }) {
                 y={height - 20 - barHeight}
                 width={w}
                 height={barHeight}
-                fill="#3FA9A0"
+                fill="var(--color-accent)"
                 opacity="0.85"
               />
             </g>
           )
         })}
-        <line x1="0" y1={height - 20} x2="100" y2={height - 20} stroke="#1C2226" strokeWidth="0.5" />
+        <line x1="0" y1={height - 20} x2="100" y2={height - 20} stroke="var(--color-border)" strokeWidth="0.5" />
       </svg>
       <div className="flex mt-1">
         {data.map((d) => (

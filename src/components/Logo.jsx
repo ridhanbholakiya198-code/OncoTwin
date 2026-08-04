@@ -6,8 +6,8 @@ export default function Logo({ size = 28, showWordmark = true }) {
   return (
     <div className="flex items-center gap-2.5">
       <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-        <circle cx="16" cy="20" r="11" stroke="#3FA9A0" strokeWidth="1.6" />
-        <circle cx="24" cy="20" r="11" stroke="#E6EDEF" strokeWidth="1.6" strokeOpacity="0.35" />
+        <circle cx="16" cy="20" r="11" stroke="var(--color-accent)" strokeWidth="1.6" />
+        <circle cx="24" cy="20" r="11" stroke="var(--color-ink)" strokeWidth="1.6" strokeOpacity="0.35" />
       </svg>
       {showWordmark && (
         <span className="font-display font-semibold tracking-tight text-ink text-lg">

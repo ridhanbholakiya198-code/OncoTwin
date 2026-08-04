@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================
+   Theme tokens — dark (default) and light.
+   Every component already uses Tailwind classes like bg-bg,
+   text-ink, border-border etc — those map to these CSS
+   variables (see tailwind.config.js), so toggling the `.light`
+   class on <html> re-themes the entire app with no per-component
+   changes needed.
+   ========================================================== */
+:root {
+  --color-bg: #050607;
+  --color-surface: #0E1113;
+  --color-surface2: #14181B;
+  --color-border: #1C2226;
+  --color-ink: #E6EDEF;
+  --color-muted: #8A9599;
+  --color-accent: #3FA9A0;
+  --color-accent-soft: rgba(63, 169, 160, 0.12);
+  --color-established: #4ADE80;
+  --color-theoretical: #FBBF24;
+  --color-speculative: #F87171;
+}
+
+html.light {
+  /* A considered light palette — soft off-white rather than stark white,
+     near-black (not pure black) ink, and deepened accent/status colors
+     for proper contrast against a light background. */
+  --color-bg: #F7F8F8;
+  --color-surface: #FFFFFF;
+  --color-surface2: #F0F2F2;
+  --color-border: #E1E5E6;
+  --color-ink: #12181A;
+  --color-muted: #6B7478;
+  --color-accent: #2E8880;
+  --color-accent-soft: rgba(46, 136, 128, 0.10);
+  --color-established: #16A34A;
+  --color-theoretical: #B45309;
+  --color-speculative: #DC2626;
+}
+
 html, body, #root {
   height: 100%;
   overflow-x: hidden;
@@ -9,6 +48,7 @@ html, body, #root {
 
 body {
   @apply bg-bg text-ink font-body antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 /* Evidence-anchor status dot — the signature motif used throughout OncoTwin.
@@ -21,16 +61,16 @@ body {
   border-radius: 999px;
   flex-shrink: 0;
 }
-.anchor-dot--established { background: #4ADE80; box-shadow: 0 0 6px rgba(74,222,128,0.5); }
-.anchor-dot--theoretical { background: #FBBF24; box-shadow: 0 0 6px rgba(251,191,36,0.5); }
-.anchor-dot--speculative { background: #F87171; box-shadow: 0 0 6px rgba(248,113,113,0.5); }
+.anchor-dot--established { background: var(--color-established); box-shadow: 0 0 6px color-mix(in srgb, var(--color-established) 50%, transparent); }
+.anchor-dot--theoretical { background: var(--color-theoretical); box-shadow: 0 0 6px color-mix(in srgb, var(--color-theoretical) 50%, transparent); }
+.anchor-dot--speculative { background: var(--color-speculative); box-shadow: 0 0 6px color-mix(in srgb, var(--color-speculative) 50%, transparent); }
 
 ::selection {
-  background: rgba(63,169,160,0.35);
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid #3FA9A0;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 

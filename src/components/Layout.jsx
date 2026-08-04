@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar.jsx'
 import TopBar from './TopBar.jsx'
+import Footer from './Footer.jsx'
 
 const TITLES = {
   '/': ['Dashboard', 'Runs, recent activity, and system status'],
@@ -24,8 +25,11 @@ export default function Layout() {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar title={title} subtitle={subtitle} onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
+          <div className="flex-1 p-3 sm:p-6">
+            <Outlet />
+          </div>
+          <Footer />
         </main>
       </div>
     </div>
